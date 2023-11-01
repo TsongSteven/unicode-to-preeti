@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'Kruti Dev'; /* Name of the font family */
+    src: url('../font/KRDEV010.TTF') format('woff2'), /* URL to your font file */
+         url('../font/KRDEV010.TTF') format('woff'); /* You can include multiple font file formats for browser compatibility */
+}
+.kruti-dev {
+    font-family: 'Kruti Dev 010' !important;
+}
