@@ -103,6 +103,7 @@
             'De': '8]',
             'Da': '8',
             'Daa': '8f',
+            // 'Dr': String.fromCharCode(171),
             'Di': 'l8',
             'DI': '8L',
             'Dh': '9',
@@ -274,8 +275,8 @@
             // 'Ii': 'O{',
             'i': 'l',
             'I': 'L',
-            'ou': 'उ',
-            'oU': 'ऊ',
+            'oo': 'p',
+            'Oo': 'pm',
             'ri': '[',
             'Ri': 'C',
             'e': 'P',
@@ -285,6 +286,7 @@
             'aa': String.fromCharCode(107),  
             '.': '.', 
             'o': 'f]',
+            'ou': 'f}',
             'u':"'",
             'U':'"',
             "'":'+',
@@ -303,12 +305,26 @@
     
         englishInput = englishInput.replace(regexPattern, match => {
             if (unicodeCharacterMap[match]) {
+            console.log(unicodeCharacterMap[match]);
                 return unicodeCharacterMap[match];
             } else {
                 return match; 
             }
         });
-        preetiOutPut.innerText = englishInput;
+        let op = replaceMatra(englishInput);
+        preetiOutPut.innerText = op;
+    }
+    function replaceMatra(englishInput){
+        let word = englishInput.split('');
+        for(let i=0 ;i< word.length;i++){
+            if(word[i]=='|' && word[i+1] == 'P'){
+                word[i+1]  = ']';
+            }
+            if(word[i]=='|' && word[i+1] == 'a'){
+                word[i+1]  = '';
+            }
+        }
+        return word.join('');
     }
     // function moveToLeft(input) {
     //     const arr = input.split('');
