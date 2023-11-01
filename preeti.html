@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>English to Nepali Kruti Converter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="./css/preeti.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>English phonetic to Nepali Preeti Font</h1>
+        <div class="alert alert-danger">
+            <h1>Test Verson</h1>
+        </div>
+        <textarea type="text" class="form-control mt-5" id="englishInput" onKeyUp="onKeyPress()" placeholder="Type in English"></textarea>
+        <div class="mt-5">
+            For chandrabindu <span class="preeti">+</span> type single quote (')<br>
+            For anuswar <span class="preeti">F</span> type single double quote (")<br>
+            For letter like pra kra etc which has pa and ra half do pr/ e,g pr/nan <span class="preeti" style="font: 40px;">k|gg</span><br>
+            <div id="preetiOutPut"  style="font-size: 30px;" class="preeti"></div>
+        </div>
+    </div>
+    
+    <script>
+        var tilde = '~';
+        const unicodeCharacterMap = {
+            'k': 's',
+            'ka': 's',
+            'k/': 'S',
+            'ke': 's]',
+            'kaa': 'sf',
+            'ki': 'ls',
+            'kI': 'sL',
+            'kh': 'v',
+            'kh/': 'V',
+            'kha': 'v',
+            'khi': 'lv',
+            'khI': 'vl',
+            'khe': 'v]',
+            'khaa': 'vf',
+            'g': 'u', 
+            'ga': 'u',
+            'g/': 'U',
+            'ge': 'u]',
+            'gaa': 'uf',
+            'gi': 'lu',
+            'gI': 'uL',
+            'gh': '3',
+            'gh/': String.fromCharCode(163),
+            'ghe': '3]',
+            'gha': '3',
+            'ghaa': '3f',
+            'ghi': 'l3',
+            'ghI': '3L',
+            'ng':  String.fromCharCode(170),
+            'nga': String.fromCharCode(170),
+            'ch': 'r',
+            'ch/': 'R',
+            'che': 'r]',
+            'cha': 'r',
+            'chaa': 'rf',
+            'chi':  'lr',
+            'chI': 'rL',
+            'chh':'5',
+            'chhe':'5]',
+            'chha':'5',
+            'chhaa':'5f',
+            'chhi': 'l5',
+            'chhI':'5L',
+            'j': 'h',
+            'j/': 'H',
+            'je': 'h]',
+            'ja': 'h',
+            'jaa': 'hf',
+            'ji': 'lh', 
+            'jI': 'hL',
+            'jh': String.fromCharCode(180),
+            'jh/':'‰',
+            'jhe': String.fromCharCode(180)+']',
+            'jha': String.fromCharCode(180),
+            'jhaa': String.fromCharCode(115)+'f',
+            'jhi': 'l'+String.fromCharCode(180),
+            'jhI': String.fromCharCode(180)+'L',
+            'ny': '~',
+            'ny/': '`',
+            'nya': '~',
+            'T': '6',
+            'T/': '6\\',
+            'Te': '6]',
+            'Ta': '6',
+            'Taa': '6f',
+            'Ti': 'l6',
+            'TI': '6L',
+            'TT': String.fromCharCode(167),
+            'Th': '7',
+            'Th/': '7\\',
+            'Tha': '7',
+            'The': '7]',
+            'Thi': 'l7',
+            'ThI': '7L',
+            'D': '8',
+            'D/': '8\\',
+            'De': '8]',
+            'Da': '8',
+            'Daa': '8f',
+            'Di': 'l8',
+            'DI': '8L',
+            'Dh': '9',
+            'Dh/': '9\\',
+            'Dhe': '9]',
+            'Dha': '9',
+            'Dhaa': '9f',
+            'Dhi': 'l9',
+            'DhI': '9L',
+            'N': '0f',
+            'N/': '0',
+            'Na': '0f',
+            't': 't',
+            't/': 'T',
+            'te': 't]',
+            'ta': 't',
+            'taa': 'tf',
+            'ti': 'lt',
+            'tI': 'tL',
+            'th': 'y',
+            'th/': 'Y',
+            'the': 'y]',
+            'tha': 'y',
+            'thaa': 'yf',
+            'thi': 'ly',
+            'thI': 'yL',
+            'd': 'b',
+            'd': 'b\\',
+            'de': 'b]',
+            'da': 'b',
+            'daa': 'bf',
+            'di': 'lb',
+            'dI': 'bL',
+            'dh': 'w',
+            'dh/': 'W',
+            'dhe': 'w]',
+            'dha': 'w',
+            'dhaa': 'wf',
+            'dhi': 'lw',
+            'dhI': 'wL',
+            'n': 'g',
+            'n/': 'G',
+            'ne': 'g]',
+            'na': 'g',
+            'naa': 'gf',
+            'ni': 'lg',
+            'nI': 'gL',
+            'p': 'k',
+            'p/': 'K',
+            'pe': 'k]',
+            'pa': 'k',
+            'paa': 'kf',
+            'pi': 'lk',
+            'pI': 'kL',
+            'f': 'km',
+            'f/': 'ˆ',
+            'fe': 'km]',
+            'fa': 'km',
+            'faa': 'kmf',
+            'fi': 'lkm',
+            'fI': 'kmL',
+            'b': 'a',
+            'b/': 'A',
+            'be': 'a]',
+            'ba': 'a',
+            'baa': 'af',
+            'bi': 'la',
+            'bI': 'aL',
+            'bh': 'e',
+            'bh/': 'E',
+            'bhe': 'e]',
+            'bha': 'e',
+            'bhaa': 'ef',
+            'bhi': 'le',
+            'bhI': 'eL',
+            'm': 'd',
+            'm/': 'D',
+            'me': 'd]',
+            'ma': 'd',
+            'maa': 'df',
+            'mi': 'ld',
+            'mI': 'dL',
+            'y': 'o',
+            'y/': String.fromCharCode(216),
+            'ye': 'o]',
+            'ya': 'o',
+            'yaa': 'of',
+            'yi': 'lo',
+            'yI': 'oL',
+            'r': '/',
+            'r/': '|',
+            'ra/': '|',
+            're': '/]',
+            'ra': '/',
+            'raa': '/f',
+            'rr/': String.fromCharCode(165),
+            'ri': 'l/',
+            'rI': '/L',
+            'l': 'n',
+            'l/': 'N',
+            'le': 'n]',
+            'la': 'n',
+            'laa': 'nf',
+            'li': 'ln',
+            'lI': 'nL',
+            'w': 'j',
+            'w/': 'J',
+            'we': 'j]',
+            'wa': 'j',
+            'waa': 'jf',
+            'wi': 'lj',
+            'wI': 'jL',
+            'sh': 'z',
+            'sh/': 'Z',
+            'shr': '>',
+            'shra': '>',
+            'shraa': '>f',
+            'she': 'z]',
+            'sha': 'z',
+            'shaa': 'zf',
+            'shi': 'lz',
+            'shI': 'zL',
+            'ss': 'if',
+            'ss/': 'i',
+            'sse': 'if]',
+            'ssa': 'if',
+            'ssaa': 'iff',
+            'ssi': 'lif',
+            'ssI': 'ifL',
+            's': ';',
+            's/': ':',
+            'sa': ';',
+            'se': ';]',
+            'saa': ';f',
+            'si': 'l;',
+            'sI': ';L',
+            'h': 'x',
+            'h/': 'X',
+            'he': 'x]',
+            'ha': 'x',
+            'haa': 'xf',
+            'hi': 'lx',
+            'hI': 'xL',
+            'ksh': 'If',
+            'ksh/': 'I',
+            'kshe': 'If]',
+            'ksha': 'I',
+            'kshaa': 'If',
+            'kshi': 'lI',
+            'kshI': 'IL',
+            'tr': 'q',
+            'tr/': 'q\\',
+            'tre': 'q]',
+            'tra': 'q',
+            'traa': 'qf',
+            'tri': 'lq',
+            'trI': 'qL',
+            'gy': '1',
+            'gy/': String.fromCharCode(161),
+            'gye': '1]',
+            'gya': '1',
+            'gyaa': '1f',
+            'gyi': 'l1',
+            'gyI': '1L',
+            'a':'',
+            'A': 'c',
+            'Aa': 'cf', 
+            // 'i': 'O',
+            // 'Ii': 'O{',
+            'i': 'l',
+            'I': 'L',
+            'ou': 'उ',
+            'oU': 'ऊ',
+            'ri': '[',
+            'Ri': 'C',
+            'e': 'P',
+            'ei' :'P]',
+            'O': 'cf]',
+            'Ou': 'cf}',
+            'aa': String.fromCharCode(107),  
+            '.': '.', 
+            'o': 'f]',
+            'u':"'",
+            'U':'"',
+            "'":'+',
+            '"':'F',
+        };
+        
+
+    function onKeyPress() {
+        var ch = '';
+        var englishInput = document.getElementById('englishInput').value;
+        var preetiOutPut = document.getElementById('preetiOutPut');
+        const keys = Object.keys(unicodeCharacterMap);
+        keys.sort((a, b) => b.length - a.length || a.localeCompare(b));
+
+        const regexPattern = new RegExp('(' + keys.join('|') + ')', 'g');
+    
+        englishInput = englishInput.replace(regexPattern, match => {
+            if (unicodeCharacterMap[match]) {
+                return unicodeCharacterMap[match];
+            } else {
+                return match; 
+            }
+        });
+        preetiOutPut.innerText = englishInput;
+    }
+    // function moveToLeft(input) {
+    //     const arr = input.split('');
+    //     let newString = '';
+    //     let lPos = [];
+    //     let shiftedWord= '';
+    //     let shiftPos = 2;
+    //     for (let i = 0; i < arr.length; i++) {
+    //         if(arr[i] =='l'){
+    //             lPos.push(i-shiftPos);
+    //             newString = input.replace(/l/g, "");
+    //             shiftPos++;
+    //         }
+    //     }
+    //     console.log(lPos);
+    //     for(let j = 0; j< newString.length;j++)
+    //     {
+    //         shiftedWord += newString[j];
+    //         if(lPos.includes(j+1)){
+    //             shiftedWord += 'l';
+    //         }
+    //     }
+    //      return (shiftedWord);
+    // }
+    
+    // let input = 'asdasdlpokkl';
+    // let res= moveToLeft(input);
+    // console.log(res); 
+    </script>
+</body>
+</html>
