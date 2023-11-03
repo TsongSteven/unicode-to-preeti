@@ -54,6 +54,7 @@
             'ghI': '3L',
             'ng':  String.fromCharCode(170),
             'nga': String.fromCharCode(170),
+            'ngaa': String.fromCharCode(170) +'f',
             'ch': 'r',
             'ch/': 'R',
             'che': 'r]',
@@ -103,7 +104,6 @@
             'De': '8]',
             'Da': '8',
             'Daa': '8f',
-            // 'Dr': String.fromCharCode(171),
             'Di': 'l8',
             'DI': '8L',
             'Dh': '9',
@@ -199,6 +199,7 @@
             're': '/]',
             'ra': '/',
             'raa': '/f',
+            'rr': '{',
             'rr/': String.fromCharCode(165),
             'ri': 'l/',
             'rI': '/L',
@@ -277,7 +278,7 @@
             'I': 'L',
             'oo': 'p',
             'Oo': 'pm',
-            'ri': '[',
+            'rri': '[',
             'Ri': 'C',
             'e': 'P',
             'ei' :'P]',
@@ -305,7 +306,6 @@
     
         englishInput = englishInput.replace(regexPattern, match => {
             if (unicodeCharacterMap[match]) {
-            console.log(unicodeCharacterMap[match]);
                 return unicodeCharacterMap[match];
             } else {
                 return match; 
@@ -314,14 +314,32 @@
         let op = replaceMatra(englishInput);
         preetiOutPut.innerText = op;
     }
+
     function replaceMatra(englishInput){
         let word = englishInput.split('');
-        for(let i=0 ;i< word.length;i++){
+        for(let i= 0; i< word.length; i++){
             if(word[i]=='|' && word[i+1] == 'P'){
                 word[i+1]  = ']';
             }
+            if(word[i]=='|' && word[i+1] == 'l'){
+                let pos = word.indexOf('|') + 3;
+                word.splice(pos, 0, '{');
+                word[i] = '';
+            }
             if(word[i]=='|' && word[i+1] == 'a'){
                 word[i+1]  = '';
+            }
+            if(word[i]=='f' && word[i+1] == "'"){
+                word[i+1]  = 'p';
+            }
+            if(word[i]=='f' && word[i+1] == '"'){
+                word[i+1]  = 'pm';
+            }
+            if(word[0]=="'"){
+                word[0]  = 'p';
+            }
+            if(word[0]=='"'){
+                word[0]  = 'pm';
             }
         }
         return word.join('');
